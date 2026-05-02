@@ -1,0 +1,20 @@
+import axios from 'axios';
+const API = axios.create({ baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api' });
+API.interceptors.request.use((req) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user?.token) req.headers.Authorization = 'Bearer ' + user.token;
+  return req;
+});
+export const registerUser  = (data) => API.post('/auth/register', data);
+export const loginUser     = (data) => API.post('/auth/login', data);
+export const getMe         = ()     => API.get('/auth/me');
+export const fetchProjects  = ()         => API.get('/projects');
+export const createProject  = (data)     => API.post('/projects', data);
+export const updateProject  = (id, data) => API.put('/projects/' + id, data);
+export const deleteProject  = (id)       => API.delete('/projects/' + id);
+export const fetchTasks     = (pid)  => API.get('/tasks' + (pid ? '?project=' + pid : ''));
+export const fetchDashboard = ()     => API.get('/tasks/dashboard');
+export const createTask     = (data) => API.post('/tasks', data);
+export const updateTask     = (id, data) => API.put('/tasks/' + id, data);
+export const deleteTask     = (id)       => API.delete('/tasks/' + id);
+export const fetchUsers = () => API.get('/users');
